@@ -8,7 +8,7 @@ app.use(bodyParser.json())
 
 app.post("/list/get", (req, res) => {
 	const MongoClient = require("mongodb").MongoClient;
-	const uri = "mongodb://localhost:27017/to-do-app";
+	const uri = "mongodb://database/to-do-app";
 	const client = new MongoClient(uri, { useNewUrlParser: true });
 	client.connect((err) => {
 		if (err) {
@@ -30,7 +30,7 @@ app.post("/list/get", (req, res) => {
 app.post("/list/add", (req, res) => {
 	var text = req.body.text;
 	const MongoClient = require("mongodb").MongoClient;
-	const uri = "mongodb://localhost:27017/to-do-app";
+	const uri = "mongodb://database/to-do-app";
 	const client = new MongoClient(uri, { useNewUrlParser: true });
 	client.connect((err) => {
 		if (err) {
@@ -53,7 +53,7 @@ app.post("/list/add", (req, res) => {
 app.post("/list/delete", (req, res) => {
 	var id = req.body.id;
 	const MongoClient = require("mongodb").MongoClient;
-	const uri = "mongodb://localhost:27017/to-do-app";
+	const uri = "mongodb://database/to-do-app";
 	const client = new MongoClient(uri, { useNewUrlParser: true });
 	client.connect((err) => {
 		if (err) {
@@ -72,7 +72,7 @@ app.post("/list/edit", (req, res) => {
 	var newText = req.body.text;
 	var completed = req.body.completed;
 	const MongoClient = require("mongodb").MongoClient;
-	const uri = "mongodb://localhost:27017/to-do-app";
+	const uri = "mongodb://database/to-do-app";
 	const client = new MongoClient(uri, { useNewUrlParser: true });
 	client.connect((err) => {
 		if (err) {
@@ -109,7 +109,7 @@ app.post("/list/edit", (req, res) => {
 // })
 
 app.get('*', (req, res) => {
-	res.sendFile('/Users/shwetanarang/Desktop/To-do List/frontend/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+	res.sendFile('index.html', { root: __dirname }); // load the single view file (angular will handle the page changes on the front-end)
 });
 
 app.listen(5000, () => {console.log('listening on port 5000')});
