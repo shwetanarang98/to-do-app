@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+<body ng-app="myApp" ng-controller="todoCtrl">
+
+<h2>todo app</h2>
+
+<form ng-submit="todoAdd()">
+    <input type="text" ng-model="todoInput" size="50" placeholder="Add New">
+    <input type="submit" value="Add New">
+</form>
+
+<br>
+
+<div ng-repeat="x in todoList">
+    <input type="checkbox" ng-model="x.completed" ng-true-value="1" ng-false-value="0"> <span ng-bind="x.text"></span>
+</div>
+
+<p><button ng-click="remove()">Remove marked</button></p>
+
+<script>
+var app = angular.module('myApp', []); 
+app.controller('todoCtrl', function($scope, $http) {
+
+    $http.post("/list/get")
+    .then((res) => {
+        $scope.todoList = res.data.list;
+    })
+    .catch((error) => console.log(error))
+
+    $scope.todoAdd = () => {
+        var localCopy = $scope.todoInput
+        $http.post("/list/add", {text: localCopy})
+        .then((res) => {
+            console.log(res)
+            $scope.todoList.push({_id: res.data.newid, text:localCopy, completed:0});
+        })
+        .catch((error) => console.log(error))
+        $scope.todoInput = "";
+    };
+
+    $scope.remove = () => {
+        var oldList = $scope.todoList;
+        console.log(oldList)
+        $scope.todoList = [];
+        angular.forEach(oldList, (x) => {
+            if (!x.completed) {
+                $scope.todoList.push(x)
+            } else {
+                $http.post("/list/delete", {id: x._id})
+                .then((res) => console.log(res))
+                .catch((err) => console.log(err))
+            }
+        })
+    };
+});
+</script>
+
+</body>
+</html>
